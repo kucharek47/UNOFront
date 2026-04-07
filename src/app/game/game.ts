@@ -35,7 +35,26 @@ export class Game {
     return this.serwer.gracze().filter(g => g.id !== this.moje_id());
   });
 
+  czy_ruch_legalny(k: karta): boolean {
+    const stan = this.serwer.stan_pokoju();
+    const stos = this.karta_na_stosie();
+    if (!stan) return false;
+
+    if (stan.aktywne_combo) {
+      return k.wartosc === stan.aktywne_combo || (['+2', '+4'].includes(stan.aktywne_combo) && ['+2', '+4'].includes(k.wartosc));
+    }
+    if (stan.kara > 0) return k.wartosc === '+2' || k.wartosc === '+4';
+    if (stan.ile_stopow > 0) return k.wartosc === 'stop';
+
+    if (!k.kolor) return true;
+    if (k.kolor === stan.aktualny_kolor) return true;
+    if (stos && stos.wartosc === k.wartosc) return true;
+    return false;
+  }
+
   kliknij_karte(k: karta) {
+    if (!this.czy_ruch_legalny(k)) return;
+
     if (k.wartosc === 'zmiana_koloru' || k.wartosc === '+4') {
       this.czy_wybiera_kolor = true;
       this.wybrana_karta = k;
@@ -79,5 +98,8 @@ export class Game {
 
   wroc_do_lobby() {
     this.router.navigate(['/lobby']);
+  }
+  zakoncz_ture() {
+    this.wyslij_akcje(62);
   }
 }
