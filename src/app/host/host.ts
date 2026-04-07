@@ -14,7 +14,7 @@ export class Host {
   serwer = inject(Serwer);
   router = inject(Router);
 
-  nazwa_hosta = '';
+  nazwa_gracza = '';
   czy_utworzono = false;
 
   constructor() {
@@ -27,8 +27,8 @@ export class Host {
   }
 
   tworz_pokoj() {
-    if (this.nazwa_hosta.trim() !== '') {
-      this.serwer.tworz_pokoj(this.nazwa_hosta);
+    if (this.nazwa_gracza.trim() !== '') {
+      this.serwer.tworz_pokoj(this.nazwa_gracza);
       this.czy_utworzono = true;
     }
   }

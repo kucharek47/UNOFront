@@ -5,7 +5,7 @@
       <div class="formularz">
         <input
           type="text"
-          [(ngModel)]="nazwa_hosta"
+          [(ngModel)]="nazwa_gracza"
           placeholder="Wpisz swoją nazwę"
           class="input_tekst"
         />
@@ -24,7 +24,7 @@
       <div class="sekcja_graczy">
         <h3>Gracze w poczekalni ({{ serwer.gracze().length }}/5):</h3>
         <ul class="lista_graczy">
-          @for (gracz of serwer.gracze(); track gracz.id) {
+          @for (gracz of serwer.gracze(); track gracz.numer_w_pokoju) {
             <li class="gracz_element">
               <span class="nazwa">{{ gracz.nazwa }}</span>
               @if (gracz.czy_bot) {
@@ -47,11 +47,11 @@
           Dodaj Bota
         </button>
         <button
-          class="btn btn_start"
+          class="btn btn_akcja btn_start"
           (click)="start_gry()"
           [disabled]="serwer.gracze().length < 2"
         >
-          Rozpocznij Grę
+          Start Gry
         </button>
       </div>
     </div>

@@ -8,8 +8,8 @@ import { pokoj, gracz, karta, aktualizacja_stolu, odpowiedz_serwera } from './in
 export class Serwer {
   socket: Socket;
 
-  token = signal<string>('');
-  kod_pokoju = signal<string>('');
+  token = signal<string>(typeof window !== 'undefined' ? sessionStorage.getItem('token') || '' : '');
+  kod_pokoju = signal<string>(typeof window !== 'undefined' ? sessionStorage.getItem('kod_pokoju') || '' : '');
   numer_gracza = signal<number>(-1);
 
   stan_pokoju = signal<pokoj | null>(null);
@@ -24,9 +24,21 @@ export class Serwer {
       this.aktualizuj_stan(dane);
     });
 
-    this.socket.on('nowy_gracz', (dane: gracz) => {
-      this.gracze.update(obecni => [...obecni, dane]);
+    this.socket.on('nowy_gracz', (dane: any) => {
+      const nowy_gracz: gracz = {
+        id: -1,
+        numer_w_pokoju: dane.numer,
+        nazwa: dane.nazwa || `Bot ${dane.numer}`,
+        czy_bot: dane.czy_bot,
+        zglasza_uno: false,
+        pominiete_tury: 0
+      };
+      this.gracze.update(obecni => [...obecni, nowy_gracz]);
     });
+
+    if (this.token()) {
+      this.wznow_sesje();
+    }
   }
 
   aktualizuj_stan(dane: aktualizacja_stolu) {
@@ -39,9 +51,17 @@ export class Serwer {
   tworz_pokoj(nazwa: string) {
     this.socket.emit('tworz_pokoj', { nazwa }, (odpowiedz: odpowiedz_serwera) => {
       if (odpowiedz.status === 'ok') {
-        this.token.set(odpowiedz.token || '');
-        this.kod_pokoju.set(odpowiedz.kod || '');
-        this.numer_gracza.set(odpowiedz.numer_gracza ?? -1);
+        this.zapisz_sesje(odpowiedz.token!, odpowiedz.kod!, odpowiedz.numer_gracza!);
+        this.gracze.set([{
+          id: -1,
+          numer_w_pokoju: odpowiedz.numer_gracza!,
+          nazwa: nazwa,
+          czy_bot: false,
+          zglasza_uno: false,
+          pominiete_tury: 0
+        }]);
+      } else {
+        alert(odpowiedz.wiadomosc);
       }
     });
   }
@@ -49,11 +69,21 @@ export class Serwer {
   dolacz(kod: string, nazwa: string) {
     this.socket.emit('dolacz', { kod, nazwa }, (odpowiedz: odpowiedz_serwera) => {
       if (odpowiedz.status === 'ok') {
-        this.token.set(odpowiedz.token || '');
-        this.kod_pokoju.set(odpowiedz.kod || '');
-        this.numer_gracza.set(odpowiedz.numer_gracza ?? -1);
+        this.zapisz_sesje(odpowiedz.token!, odpowiedz.kod!, odpowiedz.numer_gracza!);
+      } else {
+        alert(odpowiedz.wiadomosc);
       }
     });
+  }
+
+  private zapisz_sesje(token: string, kod: string, numer: number) {
+    this.token.set(token);
+    this.kod_pokoju.set(kod);
+    this.numer_gracza.set(numer);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('kod_pokoju', kod);
+    }
   }
 
   dodaj_bota() {

@@ -46,24 +46,32 @@ export class Game {
 
   wybierz_kolor(k: kolor) {
     this.czy_wybiera_kolor = false;
-    if (this.wybrana_karta) {
-      this.wyslij_akcje(this.wybrana_karta.pozycja);
+    if (this.wybrana_karta && k) {
+      const kolory = ['czerwony', 'zielony', 'niebieski', 'zolty'];
+      const kolor_idx = kolory.indexOf(k);
+      const baza_akcji = this.wybrana_karta.wartosc === 'zmiana_koloru' ? 52 : 56;
+      this.wyslij_akcje(baza_akcji + kolor_idx);
       this.wybrana_karta = null;
     }
   }
 
+  zglos_brak_uno(gracz_id: number) {
+    const cel = this.serwer.gracze().find(g => g.id === gracz_id);
+    if (cel) {
+      const ile_graczy = this.serwer.gracze().length;
+      const odleglosc = (cel.numer_w_pokoju - this.serwer.numer_gracza() + ile_graczy) % ile_graczy;
+      this.wyslij_akcje(63 + odleglosc);
+    }
+  }
+
   dobierz_karte() {
-    const max_pozycja = this.moja_reka().length;
-    this.wyslij_akcje(max_pozycja);
+    this.wyslij_akcje(60);
   }
 
   krzycz_uno() {
-
+    this.wyslij_akcje(61);
   }
 
-  zglos_brak_uno(gracz_id: number) {
-
-  }
 
   wyslij_akcje(akcja_id: number) {
     this.serwer.wykonaj_ruch(akcja_id);
