@@ -4,18 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { Serwer } from '../serwer';
 
 @Component({
-  selector: 'app-host',
+  selector: 'app-join',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './host.html',
-  styleUrl: './host.scss'
+  templateUrl: './join.html',
+  styleUrl: './join.scss'
 })
-export class Host {
+export class Join {
   serwer = inject(Serwer);
   router = inject(Router);
 
-  nazwa_hosta = '';
-  czy_utworzono = false;
+  nazwa_gracza = '';
+  kod_pokoju = '';
+  czy_dolaczono = false;
 
   constructor() {
     effect(() => {
@@ -26,18 +27,14 @@ export class Host {
     });
   }
 
-  tworz_pokoj() {
-    if (this.nazwa_hosta.trim() !== '') {
-      this.serwer.tworz_pokoj(this.nazwa_hosta);
-      this.czy_utworzono = true;
+  dolacz_do_pokoju() {
+    if (this.nazwa_gracza.trim() !== '' && this.kod_pokoju.trim() !== '') {
+      this.serwer.dolacz(this.kod_pokoju, this.nazwa_gracza);
+      this.czy_dolaczono = true;
     }
   }
 
-  dodaj_bota() {
-    this.serwer.dodaj_bota();
-  }
-
-  start_gry() {
-    this.serwer.start_gry();
+  wroc_do_menu() {
+    this.router.navigate(['/lobby']);
   }
 }

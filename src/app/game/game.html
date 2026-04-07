@@ -1,1 +1,67 @@
-<p>game works!</p>
+<div class="frame_gry">
+  @if (serwer.stan_pokoju()?.status === 'zakonczona') {
+    <div class="modal_tlo">
+      <div class="modal_box">
+        <h2>Koniec Gry!</h2>
+        <button class="btn btn_akcja" (click)="wroc_do_lobby()">Wróć do poczekalni</button>
+      </div>
+    </div>
+  }
+
+  @if (czy_wybiera_kolor) {
+    <div class="modal_tlo">
+      <div class="modal_box">
+        <h2>Wybierz kolor</h2>
+        <div class="wybor_kolorow">
+          <button class="btn_kolor czerwony" (click)="wybierz_kolor('czerwony')"></button>
+          <button class="btn_kolor zielony" (click)="wybierz_kolor('zielony')"></button>
+          <button class="btn_kolor niebieski" (click)="wybierz_kolor('niebieski')"></button>
+          <button class="btn_kolor zolty" (click)="wybierz_kolor('zolty')"></button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="logi_box">
+    @for (log of serwer.logi(); track $index) {
+      <p>{{ log }}</p>
+    }
+  </div>
+
+  <div class="obszar_przeciwnikow">
+    @for (gracz of przeciwnicy(); track gracz.id) {
+      <div class="wizytowka_gracza" [class.aktywny]="serwer.stan_pokoju()?.aktualny_gracz === gracz.numer_w_pokoju">
+        <span class="nazwa">{{ gracz.nazwa }}</span>
+        @if (gracz.zglasza_uno) {
+          <span class="uno_status">UNO!</span>
+        }
+        <button class="btn btn_maly" (click)="zglos_brak_uno(gracz.id)">Zgłoś brak UNO</button>
+      </div>
+    }
+  </div>
+
+  <div class="srodek_stolu">
+    <div class="talia karta czarny" (click)="dobierz_karte()">
+      <span class="wartosc">UNO</span>
+    </div>
+
+    @if (karta_na_stosie()) {
+      <div class="stos karta {{ karta_na_stosie()?.kolor || 'czarny' }}">
+        <span class="wartosc">{{ karta_na_stosie()?.wartosc }}</span>
+      </div>
+    }
+
+    <div class="aktywny_kolor {{ serwer.stan_pokoju()?.aktualny_kolor }}"></div>
+  </div>
+
+  <div class="panel_dolny">
+    <button class="btn btn_uno" (click)="krzycz_uno()">Krzycz UNO!</button>
+    <div class="reka">
+      @for (k of moja_reka(); track k.id) {
+        <div class="karta {{ k.kolor || 'czarny' }}" (click)="kliknij_karte(k)">
+          <span class="wartosc">{{ k.wartosc }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

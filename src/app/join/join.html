@@ -1,28 +1,36 @@
 <div class="kontener">
-  @if (!czy_utworzono) {
+  @if (!czy_dolaczono) {
     <div class="karta">
-      <h2 class="tytul">Zalóż nowy pokój</h2>
+      <h2 class="tytul">Dołącz do pokoju</h2>
       <div class="formularz">
         <input
           type="text"
-          [(ngModel)]="nazwa_hosta"
+          [(ngModel)]="nazwa_gracza"
           placeholder="Wpisz swoją nazwę"
           class="input_tekst"
         />
-        <button class="btn btn_akcja" (click)="tworz_pokoj()">Utwórz</button>
+        <input
+          type="text"
+          [(ngModel)]="kod_pokoju"
+          placeholder="Wpisz 6-cyfrowy kod pokoju"
+          class="input_tekst"
+          maxlength="6"
+        />
+        <button class="btn btn_akcja" (click)="dolacz_do_pokoju()">Dołącz</button>
+        <button class="btn btn_powrot" (click)="wroc_do_menu()">Wróć</button>
       </div>
     </div>
   } @else {
     <div class="karta lobby_karta">
-      <h2 class="tytul">Twój pokój</h2>
+      <h2 class="tytul">Oczekiwanie na Hosta</h2>
 
-      <div class="kod_pokoju">
-        <span>KOD:</span>
-        <strong>{{ serwer.kod_pokoju() }}</strong>
+      <div class="info_oczekiwania">
+        <p>Jesteś w pokoju: <strong>{{ serwer.kod_pokoju() }}</strong></p>
+        <p>Gra rozpocznie się, gdy host kliknie Start.</p>
       </div>
 
       <div class="sekcja_graczy">
-        <h3>Gracze w poczekalni ({{ serwer.gracze().length }}/5):</h3>
+        <h3>Gracze w poczekalni:</h3>
         <ul class="lista_graczy">
           @for (gracz of serwer.gracze(); track gracz.id) {
             <li class="gracz_element">
@@ -36,23 +44,6 @@
             </li>
           }
         </ul>
-      </div>
-
-      <div class="akcje_lobby">
-        <button
-          class="btn btn_akcja"
-          (click)="dodaj_bota()"
-          [disabled]="serwer.gracze().length >= 5"
-        >
-          Dodaj Bota
-        </button>
-        <button
-          class="btn btn_start"
-          (click)="start_gry()"
-          [disabled]="serwer.gracze().length < 2"
-        >
-          Rozpocznij Grę
-        </button>
       </div>
     </div>
   }

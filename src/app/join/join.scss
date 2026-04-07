@@ -37,6 +37,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+  text-align: center;
 }
 
 .btn {
@@ -47,48 +48,40 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
 }
 
 .btn_akcja {
-  background-color: #007bff;
-  color: white;
-
-  &:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-}
-
-.btn_start {
   background-color: #28a745;
   color: white;
 
-  &:hover:not(:disabled) {
+  &:hover {
     background-color: #218838;
   }
 }
 
-.kod_pokoju {
+.btn_powrot {
+  background-color: #6c757d;
+  color: white;
+
+  &:hover {
+    background-color: #5a6268;
+  }
+}
+
+.info_oczekiwania {
   margin: 1.5rem 0;
   padding: 1rem;
   background-color: #e9ecef;
   border-radius: 8px;
-  font-size: 1.5rem;
 
   strong {
-    letter-spacing: 2px;
     color: #d9534f;
-    margin-left: 10px;
+    letter-spacing: 1px;
   }
 }
 
 .sekcja_graczy {
   text-align: left;
-  margin-bottom: 2rem;
 
   h3 {
     font-size: 1.1rem;
@@ -125,14 +118,4 @@
   color: #ffc107;
   font-size: 0.85rem;
   font-weight: bold;
-}
-
-.akcje_lobby {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-
-  .btn {
-    flex: 1;
-  }
 }

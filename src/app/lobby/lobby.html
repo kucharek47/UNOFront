@@ -1,8 +1,15 @@
-<div class="kontener_lobby">
-  <h1 class="tytul_glowny">Lobby UNO</h1>
+<div class="kontener_glowny">
+  <div class="karta_powitalna">
+    <h1 class="tytul_gry">UNO Web</h1>
+    <p class="podtytul">Wybierz, co chcesz zrobić:</p>
 
-  <div class="sekcja_przyciskow">
-    <button class="btn_akcja" (click)="przejdz_do_host()">Hostuj Grę</button>
-    <button class="btn_akcja" (click)="przejdz_do_join()">Dołącz do Gry</button>
+    <div class="akcje_menu">
+      <button class="btn btn_host" (click)="idz_do_host()">
+        Stwórz nowy pokój
+      </button>
+      <button class="btn btn_join" (click)="idz_do_join()">
+        Dołącz do gry
+      </button>
+    </div>
   </div>
 </div>
