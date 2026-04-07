@@ -1,0 +1,33 @@
+.kontener_lobby {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+
+  .tytul_glowny {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .sekcja_przyciskow {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+
+    .btn_akcja {
+      padding: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      border: 2px solid #000;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+    }
+  }
+}
