@@ -10,7 +10,7 @@ export class Serwer {
 
   token = signal<string>(typeof window !== 'undefined' ? sessionStorage.getItem('token') || '' : '');
   kod_pokoju = signal<string>(typeof window !== 'undefined' ? sessionStorage.getItem('kod_pokoju') || '' : '');
-  numer_gracza = signal<number>(-1);
+  numer_gracza = signal<number>(typeof window !== 'undefined' ? parseInt(sessionStorage.getItem('numer_gracza') || '-1', 10) : -1);
 
   stan_pokoju = signal<pokoj | null>(null);
   gracze = signal<gracz[]>([]);
@@ -83,6 +83,7 @@ export class Serwer {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('kod_pokoju', kod);
+      sessionStorage.setItem('numer_gracza', numer.toString());
     }
   }
 
@@ -100,8 +101,16 @@ export class Serwer {
 
   wznow_sesje() {
     this.socket.emit('wznow_sesje', { token: this.token() }, (odpowiedz: odpowiedz_serwera) => {
-      if (odpowiedz.status === 'ok' && odpowiedz.stan_gry) {
-        this.aktualizuj_stan(odpowiedz.stan_gry);
+      if (odpowiedz.status === 'ok') {
+        if (odpowiedz.numer_gracza !== undefined) {
+          this.numer_gracza.set(odpowiedz.numer_gracza);
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('numer_gracza', odpowiedz.numer_gracza.toString());
+          }
+        }
+        if (odpowiedz.stan_gry) {
+          this.aktualizuj_stan(odpowiedz.stan_gry);
+        }
       }
     });
   }
