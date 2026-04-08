@@ -42,10 +42,15 @@ export class Serwer {
   }
 
   aktualizuj_stan(dane: aktualizacja_stolu) {
+    console.log('[DEBUG] Otrzymano stan stolu:', dane);
+
     if (dane.pokoj) this.stan_pokoju.set(dane.pokoj);
     if (dane.gracze) this.gracze.set(dane.gracze);
     if (dane.karty) this.karty.set(dane.karty);
-    if (dane.logi) this.logi.set(dane.logi);
+
+    if (dane.logi && dane.logi.length > 0) {
+      this.logi.update(obecne => [...obecne, ...dane.logi!]);
+    }
   }
 
   tworz_pokoj(nazwa: string) {

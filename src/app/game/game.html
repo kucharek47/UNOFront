@@ -6,6 +6,14 @@
         <button class="btn btn_akcja" (click)="wroc_do_lobby()">Wróć do poczekalni</button>
       </div>
     </div>
+  } @else if (serwer.stan_pokoju()?.status === 'w_trakcie' && moja_reka().length === 0) {
+    <div class="modal_tlo">
+      <div class="modal_box">
+        <h2>Wygrałeś!</h2>
+        <p>Poczekaj, aż pozostali gracze skończą grę, lub wróć do poczekalni.</p>
+        <button class="btn btn_akcja" (click)="wroc_do_lobby()">Wróć do poczekalni</button>
+      </div>
+    </div>
   }
 
   @if (czy_wybiera_kolor) {
@@ -40,7 +48,7 @@
     }
   </div>
 
-  <div class="srodek_stolu">
+  <div class="srodek_stolu" [class.blad_ruchu]="animacja_bledu">
     <div class="talia karta czarny" (click)="dobierz_karte()">
       <span class="wartosc">UNO</span>
     </div>

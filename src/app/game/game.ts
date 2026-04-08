@@ -15,6 +15,8 @@ export class Game {
   router = inject(Router);
 
   czy_wybiera_kolor = false;
+  animacja_bledu = false;
+  timer_bledu: any;
   wybrana_karta: karta | null = null;
 
   moje_id = computed(() => {
@@ -52,14 +54,43 @@ export class Game {
     return false;
   }
 
+  pobierz_akcje_dla_karty(k: karta): number {
+    const kolory = ['czerwony', 'zielony', 'niebieski', 'zolty'];
+    const wartosci = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'stop', 'zmiana_kierunku', '+2'];
+
+    if (k.kolor) {
+      return kolory.indexOf(k.kolor) * 13 + wartosci.indexOf(k.wartosc);
+    }
+    return -1;
+  }
+
   kliknij_karte(k: karta) {
-    if (!this.czy_ruch_legalny(k)) return;
+    if (!this.czy_ruch_legalny(k)) {
+      this.animacja_bledu = false;
+
+      if (this.timer_bledu) {
+        clearTimeout(this.timer_bledu);
+      }
+
+      setTimeout(() => {
+        this.animacja_bledu = true;
+      }, 10);
+
+      this.timer_bledu = setTimeout(() => {
+        this.animacja_bledu = false;
+      }, 610);
+
+      return;
+    }
 
     if (k.wartosc === 'zmiana_koloru' || k.wartosc === '+4') {
       this.czy_wybiera_kolor = true;
       this.wybrana_karta = k;
     } else {
-      this.wyslij_akcje(k.pozycja);
+      const akcja = this.pobierz_akcje_dla_karty(k);
+      if (akcja !== -1) {
+        this.wyslij_akcje(akcja);
+      }
     }
   }
 
