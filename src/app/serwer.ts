@@ -18,7 +18,13 @@ export class Serwer {
   logi = signal<string[]>([]);
 
   constructor() {
-    this.socket = io('http://localhost:5000');
+    this.socket = io('https://test.kucharek47.pl/');
+
+    this.socket.on('connect', () => {
+      if (this.token()) {
+        this.wznow_sesje();
+      }
+    });
 
     this.socket.on('aktualizacja_stolu', (dane: aktualizacja_stolu) => {
       this.aktualizuj_stan(dane);
