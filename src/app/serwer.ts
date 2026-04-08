@@ -18,7 +18,7 @@ export class Serwer {
   logi = signal<string[]>([]);
 
   constructor() {
-    this.socket = io('https://test.kucharek47.pl/');
+    this.socket = io('https://uno.kucharek47.pl/');
 
     this.socket.on('connect', () => {
       if (this.token()) {
