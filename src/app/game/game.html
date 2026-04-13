@@ -55,7 +55,12 @@
 
     @if (karta_na_stosie()) {
       <div class="stos karta {{ karta_na_stosie()?.kolor || 'czarny' }}">
-        <span class="wartosc">{{ karta_na_stosie()?.wartosc }}</span>
+        @switch (karta_na_stosie()?.wartosc) {
+          @case ('stop') { <img src="/img/block.png" alt="stop" class="ikona_karty"> }
+          @case ('zmiana_kierunku') { <img src="/img/switch.png" alt="zmiana kierunku" class="ikona_karty"> }
+          @case ('zmiana_koloru') { <img src="/img/cahnge%20color.png" alt="zmiana koloru" class="ikona_karty"> }
+          @default { <span class="wartosc">{{ karta_na_stosie()?.wartosc }}</span> }
+        }
       </div>
     }
 
@@ -68,7 +73,12 @@
     <div class="reka">
       @for (k of moja_reka(); track k.id) {
         <div class="karta {{ k.kolor || 'czarny' }}" (click)="kliknij_karte(k)">
-          <span class="wartosc">{{ k.wartosc }}</span>
+          @switch (k.wartosc) {
+            @case ('stop') { <img src="/img/block.png" alt="stop" class="ikona_karty"> }
+            @case ('zmiana_kierunku') { <img src="/img/switch.png" alt="zmiana kierunku" class="ikona_karty"> }
+            @case ('zmiana_koloru') { <img src="/img/cahnge%20color.png" alt="zmiana koloru" class="ikona_karty"> }
+            @default { <span class="wartosc">{{ k.wartosc }}</span> }
+          }
         </div>
       }
     </div>
